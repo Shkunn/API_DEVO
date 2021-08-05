@@ -88,19 +88,24 @@ def received(data):
 
 
 if __name__ == '__main__':
-    # sio.connect('http://localhost:5000')    
-    sio.connect('https://api-devo.herokuapp.com/:5000')
-    print(sio.connected)
+    connected = False
+    while not connected:
+        try:
+            sio.connect('http://0.0.0.0:5000')    
+            # sio.connect('https://api-devo.herokuapp.com/')
+        except socketio.exceptions.ConnectionError as err:
+            print("ConnectionError: ", err)
+        else:
+            print("Connected!")
+            connected = True
 
-    i = 0
-    while True:
-        if (sio.connected):
-            print("connected")
-            sio.emit('robot', "MK2R2_1")
-            send_global_data()
+            i = 0
+            while True:
+                sio.emit('robot', "MK2R2_1")
+                send_global_data()
 
-            if i%5 == 0:
-                check_map()
+                if i%5 == 0:
+                    check_map()
 
-            i += 1
-            time.sleep(1) 
+                i += 1
+                time.sleep(1) 
