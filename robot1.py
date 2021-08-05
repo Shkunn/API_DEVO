@@ -88,8 +88,8 @@ def received(data):
 
 
 if __name__ == '__main__':
-    sio.connect('http://localhost:5000')    
-    # sio.connect('https://api-devo.herokuapp.com/:5000')
+    # sio.connect('http://localhost:5000')    
+    sio.connect('https://api-devo.herokuapp.com/:5000')
     print(sio.connected)
 
     i = 0

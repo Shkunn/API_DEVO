@@ -16,6 +16,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, close_room
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
+# eventlet.monkey_patch()
 
 socketio = SocketIO(cors_allowed_origins='*')
 db = SQLAlchemy()
@@ -26,7 +27,6 @@ firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://mk2r2-firebase-default-rtdb.europe-west1.firebasedatabase.app/'
 })
 
-eventlet.monkey_patch()
 
 ##########################################################################################
 
@@ -635,8 +635,7 @@ def send_data_to_Interface():
             print("SEND", sid)
             socketio.emit('MESSAGE', global_sensor, to=sid)
 
-eventlet.spawn(send_data_to_Interface)
-
+# eventlet.spawn(send_data_to_Interface)
 
 
 
