@@ -523,21 +523,21 @@ def handle_message(data):
         with open('map.session', 'rb') as f:
             session_data = f.read()
 
-        img_png = imread( 'map.png' )
-        frame_png = imencode( '.png', img_png )[ 1 ]
-        encoded_png = base64.b64encode( frame_png ) 
+        # img_png = imread( 'map.png' )
+        # frame_png = imencode( '.png', img_png )[ 1 ]
+        # encoded_png = base64.b64encode( frame_png ) 
 
 
-        session_64_encode = base64.encodebytes(session_data)
+        # session_64_encode = base64.encodebytes(session_data)
 
 
         # socketio.emit('download', {'image_data': encoded_png}, sid=request.sid)
 
 
         download_dict["id"] = maps[0]["map_name"]
-        download_dict["localisation"] = maps[0]["place"]
-        download_dict["image_data"] = encoded_png
-        download_dict["session_data"] = session_64_encode
+        # download_dict["localisation"] = maps[0]["place"]
+        # download_dict["image_data"] = encoded_png
+        # download_dict["session_data"] = session_64_encode
 
         socketio.emit('download', download_dict, to=request.sid)
 
