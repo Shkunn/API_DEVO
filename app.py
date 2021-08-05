@@ -3,7 +3,7 @@ import firebase_admin
 import numpy as np
 import sqlite3 
 
-from cv2 import imread, imencode
+# from cv2 import imread, imencode
 from datetime import date
 from firebase_admin import credentials
 from firebase_admin import db
