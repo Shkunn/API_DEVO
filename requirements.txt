@@ -31,4 +31,4 @@ Werkzeug==0.14.1
 wget==3.2
 WTForms==2.3.3
 
-gunicorn
+gunicorn==20.1.0
