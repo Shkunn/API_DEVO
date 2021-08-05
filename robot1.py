@@ -91,7 +91,7 @@ if __name__ == '__main__':
     connected = False
     while not connected:
         try:
-            sio.connect('http://0.0.0.0:5000')    
+            sio.connect('http://127.0.0.1:8000')    
             # sio.connect('https://api-devo.herokuapp.com/')
         except socketio.exceptions.ConnectionError as err:
             print("ConnectionError: ", err)
