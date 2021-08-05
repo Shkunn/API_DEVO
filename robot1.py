@@ -8,7 +8,7 @@ import cv2
 sio = socketio.Client()
 
 map_number = 1
-localisation = 'DVIC' # TODO needs to be in the databsse !
+localisation = 'DVIC'
 
 
 # sensor doit avoir une de ces valeurs[ 0, 1, 2 ,3]
@@ -89,7 +89,7 @@ def received(data):
 
 if __name__ == '__main__':
     sio.connect('http://localhost:5000')    
-    # sio.connect('https://devo-api.herokuapp.com/:5000')
+    # sio.connect('https://api-devo.herokuapp.com/:5000')
     print(sio.connected)
 
     i = 0

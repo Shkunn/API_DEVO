@@ -1,4 +1,5 @@
 import base64
+import eventlet
 import firebase_admin
 import numpy as np
 import sqlite3 
@@ -16,8 +17,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 
-
-
 socketio = SocketIO(cors_allowed_origins='*')
 db = SQLAlchemy()
 DB_NAME = "users.db"
@@ -26,6 +25,8 @@ cred = credentials.Certificate('FIREBASE/mk2r2-firebase.json')
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://mk2r2-firebase-default-rtdb.europe-west1.firebasedatabase.app/'
 })
+
+eventlet.monkey_patch()
 
 ##########################################################################################
 
@@ -141,8 +142,6 @@ def load_user(id):
     return User.query.get(int(id))
 
 socketio.init_app(app)
-
-
 
 
 
@@ -628,7 +627,15 @@ def get_data(data):
     # Result is the name of the map which share the sme localisation a the data from the robot 
     return result
 
+def send_data_to_Interface():
+    while True:
+        eventlet.sleep(2)
+        if "interface_DVIC" in interface:
+            sid = interface["interface_DVIC"]
+            print("SEND", sid)
+            socketio.emit('MESSAGE', global_sensor, to=sid)
 
+eventlet.spawn(send_data_to_Interface)
 
 
 
