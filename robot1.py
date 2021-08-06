@@ -47,6 +47,10 @@ def check_map():
 def good_map():
     print('I have the good map ! What would you expect ?')
 
+@sio.on('pong')
+def pong(data):
+    print("API' talking: ", data)
+
 @sio.on('download')
 def download_map(data):
     print(data['image_data'])
@@ -89,23 +93,26 @@ def received(data):
 
 if __name__ == '__main__':
     connected = False
+    map_check = False
     while not connected:
         try:
-            sio.connect('http://0.0.0.0:5000')    
-            # sio.connect('https://api-devo.herokuapp.com/')
+            # sio.connect('http://0.0.0.0:5000')    
+            sio.connect('https://api-devo.herokuapp.com/')
         except socketio.exceptions.ConnectionError as err:
             print("ConnectionError: ", err)
         else:
             print("Connected!")
             connected = True
+            sio.emit('robot', "MK2R2_1")
 
             i = 0
             while True:
-                sio.emit('robot', "MK2R2_1")
                 send_global_data()
+                sio.emit('ping')
 
-                if i%5 == 0:
+                if not map_check:
                     check_map()
+                    map_check = True
 
                 i += 1
                 time.sleep(1) 

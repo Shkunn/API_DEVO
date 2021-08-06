@@ -435,6 +435,15 @@ def robot_position_to_reach(name, position):
 def test_connect():
     print('Client Connected')
 
+@socketio.on('ping')
+def ping():
+    username = request.sid
+    for key, value in list(robot.items()):
+        if value == request.sid:
+            name = key
+
+    socketio.emit('pong', "hello" + name, to=username)
+
 @socketio.on('robot')
 def handle_message(auth):
     print(auth, 'Connected')
