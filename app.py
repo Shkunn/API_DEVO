@@ -539,13 +539,13 @@ def handle_message(data):
         # session_64_encode = base64.encodebytes(session_data)
 
 
-        # socketio.emit('download', {'image_data': encoded_png}, sid=request.sid)
+        # socketio.emit('download', {'image_data': image_data}, sid=request.sid)
 
 
         download_dict["id"] = maps[0]["map_name"]
-        # download_dict["localisation"] = maps[0]["place"]
-        # download_dict["image_data"] = encoded_png
-        # download_dict["session_data"] = session_64_encode
+        download_dict["localisation"] = maps[0]["place"]
+        download_dict["image_data"] = image_data
+        download_dict["session_data"] = session_data
 
         socketio.emit('download', download_dict, to=request.sid)
 

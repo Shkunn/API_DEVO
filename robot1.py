@@ -34,6 +34,10 @@ global_sensor = {
     'position' : [50, 50]
 }
 
+
+
+
+
 @sio.event
 def connect():
     print('connection established')
@@ -42,16 +46,13 @@ def connect():
 def disconnect():
     print('disconnected from server')
 
-def check_map():
-    sio.emit('check_map', data = {"map_id" : map_number, "localisation": localisation})
-
 @sio.on('good')
 def good_map():
     print('I have the good map ! What would you expect ?')
 
 @sio.on('pong')
 def pong():
-    print("PING time with API", time.time() - start_Time)
+    print("Ping API", (time.time() - start_Time) * 1000)
 
 @sio.on('download')
 def download_map(data):
@@ -69,17 +70,6 @@ def download_map(data):
     # print(data['session_data'])
     # wget.download(data["link_png"], '/home/teddy/Documents/DEVO/API_TEST/Mine_API_TEST/MAP/map.png')
 
-def send_position():
-    position = np.random.rand(1,3)
-    sio.emit('position', data = position.tolist())
-
-def send_global_data():
-    sensors = np.random.randint(4, size=(7))
-    # global_sensor['sensors'] = sensors.tolist()
-    # position = np.random.rand(1,3)
-    sio.emit('global_data', data = sensors.tolist())
-
-
 @sio.on('command_to_do')
 def good_command(data):
     print('DATA: ', data)
@@ -91,6 +81,24 @@ def good_position(data):
 @sio.on('received')
 def received(data):
     print(data)
+
+
+
+
+
+def send_position():
+    position = np.random.rand(1,3)
+    sio.emit('position', data = position.tolist())
+
+def send_global_data():
+    sensors = np.random.randint(4, size=(7))
+    # global_sensor['sensors'] = sensors.tolist()
+    # position = np.random.rand(1,3)
+    sio.emit('global_data', data = sensors.tolist())
+
+def check_map():
+    sio.emit('check_map', data = {"map_id" : map_number, "localisation": localisation})
+
 
 
 if __name__ == '__main__':
