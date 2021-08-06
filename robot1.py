@@ -9,6 +9,8 @@ sio = socketio.Client()
 
 map_number = 1
 localisation = 'DVIC'
+start_Time = None 
+
 
 
 # sensor doit avoir une de ces valeurs[ 0, 1, 2 ,3]
@@ -48,8 +50,8 @@ def good_map():
     print('I have the good map ! What would you expect ?')
 
 @sio.on('pong')
-def pong(data):
-    print("API' talking: ", data)
+def pong():
+    print("PING time with API", time.time() - start_Time)
 
 @sio.on('download')
 def download_map(data):
@@ -108,6 +110,7 @@ if __name__ == '__main__':
             i = 0
             while True:
                 send_global_data()
+                start_Time = time.time()
                 sio.emit('ping')
 
                 if not map_check:

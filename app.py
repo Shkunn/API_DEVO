@@ -438,11 +438,11 @@ def test_connect():
 @socketio.on('ping')
 def ping():
     username = request.sid
-    for key, value in list(robot.items()):
-        if value == request.sid:
-            name = key
+    # for key, value in list(robot.items()):
+    #     if value == request.sid:
+    #         name = key
 
-    socketio.emit('pong', "hello" + name, to=username)
+    socketio.emit('pong', to=username)
 
 @socketio.on('robot')
 def handle_message(auth):
