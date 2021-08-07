@@ -1,5 +1,6 @@
 import base64
 import eventlet
+eventlet.monkey_patch()
 import firebase_admin
 import numpy as np
 import sqlite3 
@@ -15,8 +16,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, emit, join_room, leave_room, close_room
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
-# eventlet.monkey_patch()
 
 socketio = SocketIO(cors_allowed_origins='*')
 db = SQLAlchemy()
@@ -618,6 +617,14 @@ def disconnect():
 
     print('Client disconnected')
 
+
+
+
+
+
+
+
+
 def get_data(data):
     # GOAL : return the SQL map name corresponding to the location of the robot 
     print("Data from check_map(): ", data)
@@ -641,10 +648,10 @@ def send_data_to_Interface():
         eventlet.sleep(2)
         if "interface_DVIC" in interface:
             sid = interface["interface_DVIC"]
-            print("SEND", sid)
+            print("SEND to interface_DVIC")
             socketio.emit('MESSAGE', global_sensor, to=sid)
 
-# eventlet.spawn(send_data_to_Interface)
+eventlet.spawn(send_data_to_Interface)
 
 
 
