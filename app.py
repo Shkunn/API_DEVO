@@ -21,6 +21,7 @@ socketio = SocketIO(cors_allowed_origins='*')
 db = SQLAlchemy()
 DB_NAME = "users.db"
 
+
 cred = credentials.Certificate('FIREBASE/mk2r2-firebase.json')
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://mk2r2-firebase-default-rtdb.europe-west1.firebasedatabase.app/'
@@ -131,6 +132,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.debug = True
 db.init_app(app)
+socketio.init_app(app, cors_allowed_origins="*")
+
 
 login_manager = LoginManager()
 login_manager.login_view = "login"
