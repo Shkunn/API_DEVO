@@ -17,7 +17,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, close_room
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-socketio = SocketIO(cors_allowed_origins='*', async_handlers=True)
+socketio = SocketIO(cors_allowed_origins='http://localhost:8080/ ')
 db = SQLAlchemy()
 DB_NAME = "users.db"
 
@@ -140,6 +140,7 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 socketio.init_app(app)
 
@@ -644,15 +645,15 @@ def get_data(data):
     # Result is the name of the map which share the sme localisation a the data from the robot 
     return result
 
-# def send_data_to_Interface():
-#     while True:
-#         eventlet.sleep(2)
-#         if "interface_DVIC" in interface:
-#             sid = interface["interface_DVIC"]
-#             print("SEND to interface_DVIC")
-#             socketio.emit('MESSAGE', global_sensor, to=sid)
+def send_data_to_Interface():
+    while True:
+        eventlet.sleep(2)
+        if "interface_DVIC" in interface:
+            sid = interface["interface_DVIC"]
+            print("SEND to interface_DVIC")
+            socketio.emit('MESSAGE', global_sensor, to=sid)
 
-# eventlet.spawn(send_data_to_Interface)
+eventlet.spawn(send_data_to_Interface)
 
 
 
