@@ -17,7 +17,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, close_room
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-socketio = SocketIO(cors_allowed_origins='*')
+socketio = SocketIO(cors_allowed_origins='*', async_handlers=True)
 db = SQLAlchemy()
 DB_NAME = "users.db"
 
@@ -132,8 +132,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.debug = True
 db.init_app(app)
-socketio.init_app(app, cors_allowed_origins="*")
-
 
 login_manager = LoginManager()
 login_manager.login_view = "login"
