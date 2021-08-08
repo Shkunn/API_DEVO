@@ -56,9 +56,9 @@ def pong():
 
 @sio.on('download')
 def download_map(data):
-    print(data['image_data'])
-    print()
-    print(data['session_data'])
+    # print(data['image_data'])
+    print('download')
+    # print(data['session_data'])
 
     # im_bytes = base64.b64decode(data['image_data'])
     # im_arr = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
