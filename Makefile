@@ -8,3 +8,6 @@ push-heroku:
 	heroku container:release web
 
 push: push-git push-heroku
+
+run-local: 
+	docker run -it -e PORT=5000 -p 5000:5000 registry.heroku.com/api-devo-docker/web:latest
