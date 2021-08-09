@@ -622,13 +622,15 @@ def disconnect():
     close_room(room)
     print("Room: ", room, " is closed.")
     
-    name = None
+    name_robot = None
+    name_interface = None
     # If robot disconnects: request.sid with be the sid of the robot
     for key, value in list(robot.items()):
         if value == request.sid:
-            name = key
+            name_robot = key
             del robot[key]
             print(key, "is deleted")
+            socketio.emit('MESSAGE', global_sensor_empty, to=interface[name_robot])
 
     sql = """ UPDATE robots 
             SET connection=?
@@ -636,16 +638,15 @@ def disconnect():
 
     connection = "OFF"
 
-    conn_robot.execute(sql, (connection, name))
+    conn_robot.execute(sql, (connection, name_robot))
     conn_robot.commit()
 
     # If interface disconnects: request.sid with be the sid of the interface
     for key, value in list(interface.items()):
         if value == request.sid:
-            name = key
+            name_interface = key
             del interface[key]
 
-    socketio.emit('MESSAGE', global_sensor_empty, to=interface[name])
 
     print('Client disconnected')
 
