@@ -31,7 +31,7 @@
     {% if robot_ON %}
       <div class="container text-center" class="list-group-item list-group-item-success">
           {% for robot in robot_ON %} 
-          <a href="http://localhost:8080/" class="list-group-item list-group-item-action list-group-item-success"> {{robot}} </a>
+          <a href={{link[robot]}} class="list-group-item list-group-item-action list-group-item-success"> {{robot}} </a>
           {% endfor %}
       </div> 
     

@@ -43,6 +43,7 @@ map_1 = {}
 position_dict = {}
 today = str(date.today())
 date_dict[today] = {}
+link_interface = {"MK2R2_1": "http://localhost:8080/#/MK2R2_1", "MK2R2_2": "http://localhost:8080/#/MK2R2_2"}
 
 shared_received = []
 
@@ -265,7 +266,7 @@ def home():
             robot_ON.append(row[0])
 
 
-        return render_template("home.html", user=current_user, robot_ON=robot_ON, robot_OFF=robot_OFF)
+        return render_template("home.html", user=current_user, robot_ON=robot_ON, robot_OFF=robot_OFF, link=link_interface)
 
 @app.route('/api/robot', methods=['GET', 'POST'])
 @login_required
@@ -639,8 +640,7 @@ def disconnect():
             name = key
             del interface[key]
 
-    global_sensor['infos']['status'] = False
-    socketio.emit('MESSAGE', global_sensor, to=interface["interface_DVIC"])
+    socketio.emit('MESSAGE', global_sensor_empty, to=interface["interface_DVIC"])
 
     print('Client disconnected')
 
@@ -670,20 +670,10 @@ def get_data(data):
     # Result is the name of the map which share the sme localisation a the data from the robot 
     return result
 
-# def send_data_to_Interface():
-#     while True:
-#         eventlet.sleep(2)
-#         if "interface_DVIC" in interface:
-#             sid = interface["interface_DVIC"]
-#             print("SEND to interface_DVIC")
-#             socketio.emit('MESSAGE', global_sensor, to=sid)
-
-# eventlet.spawn(send_data_to_Interface)
-
 
 
 
 
 if __name__ == '__main__':
-    # socketio.run(app, host="0.0.0.0")
-    app.run(host="0.0.0.0")
+    socketio.run(app, host="0.0.0.0")
+    # app.run(host="0.0.0.0")
