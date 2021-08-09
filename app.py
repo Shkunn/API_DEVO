@@ -509,8 +509,13 @@ def handle_global_data(data):
     shared_received = data
     print(shared_received)
 
-    if "interface_DVIC" in interface:
-        sid = interface['interface_DVIC']
+    if bool(interface):
+        print(interface)
+        for key, value in list(robot.items()):
+            if value == request.sid:
+                name = key
+        
+        sid = interface[name]
         global_sensor['sensors'] = shared_received
         socketio.emit('MESSAGE', global_sensor, to=sid)
 
@@ -640,7 +645,7 @@ def disconnect():
             name = key
             del interface[key]
 
-    socketio.emit('MESSAGE', global_sensor_empty, to=interface["interface_DVIC"])
+    socketio.emit('MESSAGE', global_sensor_empty, to=interface[name])
 
     print('Client disconnected')
 
@@ -675,5 +680,5 @@ def get_data(data):
 
 
 if __name__ == '__main__':
-    # socketio.run(app, host="0.0.0.0")
-    app.run(host="0.0.0.0")
+    socketio.run(app, host="0.0.0.0")
+    # app.run(host="0.0.0.0")
