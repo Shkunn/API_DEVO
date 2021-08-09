@@ -252,10 +252,10 @@ def logout():
 def home():
     if request.method == 'GET':
         cursor_OFF = cur_robot.execute("SELECT name FROM robots WHERE connection='OFF' AND localisation='{}'".format(current_user.username))
-        rows_OFF = cursor_OFF.fetchall()
+        rows_OFF   = cursor_OFF.fetchall()
 
-        cursor_ON = cur_robot.execute("SELECT name FROM robots WHERE connection='ON'AND localisation='{}'".format(current_user.username))
-        rows_ON = cursor_ON.fetchall()
+        cursor_ON  = cur_robot.execute("SELECT name FROM robots WHERE connection='ON' AND localisation='{}'".format(current_user.username))
+        rows_ON    = cursor_ON.fetchall()
 
         robot_OFF = []
         robot_ON = []
