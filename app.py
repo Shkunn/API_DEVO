@@ -639,7 +639,8 @@ def disconnect():
             name = key
             del interface[key]
 
-    socketio.emit('MESSAGE', global_sensor_empty, to=interface["interface_DVIC"])
+    global_sensor['infos']['status'] = False
+    socketio.emit('MESSAGE', global_sensor, to=interface["interface_DVIC"])
 
     print('Client disconnected')
 
