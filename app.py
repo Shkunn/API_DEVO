@@ -43,7 +43,8 @@ map_1 = {}
 position_dict = {}
 today = str(date.today())
 date_dict[today] = {}
-link_interface = {"MK2R2_1": "http://localhost:8080/#/MK2R2_1", "MK2R2_2": "http://localhost:8080/#/MK2R2_2"}
+
+link_interface = {}
 
 shared_received = []
 
@@ -485,6 +486,8 @@ def handle_message(auth):
     conn_robot.commit()
 
     position_dict[auth] = []
+
+    link_interface[auth] = 'http://localhost:8080/#/' + str(auth)
 
     socketio.emit('received', "ok", to=username)
 
