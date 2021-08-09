@@ -504,13 +504,14 @@ def handle_message_interface(auth):
 
     with open('map.png', 'rb') as f:
         image_data = f.read()
+    
     socketio.emit('received_image', {'image_data': image_data}, sid=username)
 
 @socketio.on('global_data')
 def handle_global_data(data):
     global shared_received
     shared_received = data
-    print(shared_received)
+    # print(shared_received)
 
     if bool(interface):
         print(interface)
@@ -632,6 +633,7 @@ def disconnect():
         if value == request.sid:
             name_robot = key
             del robot[key]
+            del link_interface[key]
             print(key, "is deleted")
             if bool(interface):
                 socketio.emit('MESSAGE', global_sensor_empty, to=interface[name_robot])
