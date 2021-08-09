@@ -633,7 +633,8 @@ def disconnect():
             name_robot = key
             del robot[key]
             print(key, "is deleted")
-            socketio.emit('MESSAGE', global_sensor_empty, to=interface[name_robot])
+            if bool(interface):
+                socketio.emit('MESSAGE', global_sensor_empty, to=interface[name_robot])
 
     sql = """ UPDATE robots 
             SET connection=?
