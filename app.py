@@ -67,6 +67,26 @@ global_sensor = {
     'position' : [50, 50]
 }
 
+global_sensor_empty = {
+    'sensors' : [0, 0, 0, 0, 0, 0, 0], 
+    'stats' : {
+        'volt' : "0",
+        'heatCore' : "0",
+        'esp32_A' : "OFF",
+        "esp32_B" : "OFF",
+        "slam" : "OFF",
+        "speed" : "0",
+        'timeUsed' : "0"
+    },
+    'infos' : {
+        'status' : False,
+        'name' : "MK2R2_1",
+        'ip' : '172.21.72.168',
+        'ping' : "0"
+    },
+    'position' : [0, 0]
+}
+
 ##########################################################################################
 
 
@@ -616,6 +636,8 @@ def disconnect():
         if value == request.sid:
             name = key
             del interface[key]
+
+    socketio.emit('MESSAGE', global_sensor_empty, to=request.sid)
 
     print('Client disconnected')
 
