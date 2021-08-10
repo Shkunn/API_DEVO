@@ -551,16 +551,16 @@ def handle_message(data):
         if maps is not None:
             print(maps)          
 
-        # download_dict["id"] = maps[0]["map_name"]
-        # download_dict["localisation"] = maps[0]["place"]
-        # download_dict["link_session"] = "http://127.0.0.1:5000/api/map/download/map.session"
-        # download_dict["link_png"] = "http://127.0.0.1:5000/api/map/download/map.png"
+        download_dict["id"] = maps[0]["map_name"]
+        download_dict["localisation"] = maps[0]["place"]
+        download_dict["link_session"] = "https://api-devo-docker.herokuapp.com/api/map/download/map.session"
+        download_dict["link_png"] = "https://api-devo-docker.herokuapp.com/api/map/download/map.png"
 
-        with open('map.png', 'rb') as f:
-            image_data = f.read()
+        # with open('map.png', 'rb') as f:
+        #     image_data = f.read()
 
-        with open('map.session', 'rb') as f:
-            session_data = f.read()
+        # with open('map.session', 'rb') as f:
+        #     session_data = f.read()
 
         # img_png = imread( 'map.png' )
         # frame_png = imencode( '.png', img_png )[ 1 ]
@@ -573,10 +573,10 @@ def handle_message(data):
         # socketio.emit('download', {'image_data': image_data}, sid=request.sid)
 
 
-        download_dict["id"] = maps[0]["map_name"]
-        download_dict["localisation"] = maps[0]["place"]
-        download_dict["image_data"] = image_data
-        download_dict["session_data"] = session_data
+        # download_dict["id"] = maps[0]["map_name"]
+        # download_dict["localisation"] = maps[0]["place"]
+        # download_dict["image_data"] = image_data
+        # download_dict["session_data"] = session_data
 
         socketio.emit('download', download_dict, to=request.sid)
 
