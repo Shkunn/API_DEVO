@@ -12,6 +12,14 @@ localisation = 'DVIC'
 start_Time = None 
 
 
+import io
+import PIL.Image as Image
+
+def readimage(path):
+    with open(path, "rb") as f:
+        return bytearray(f.read())
+
+
 
 # sensor doit avoir une de ces valeurs[ 0, 1, 2 ,3]
 global_sensor = {
@@ -56,8 +64,12 @@ def pong():
 
 @sio.on('download')
 def download_map(data):
-    # print(data['image_data'])
-    print('download')
+    print(data['link_png'])
+    wget.download(data["link_png"], '/home/teddy/Documents/DEVO/API/API_DEVO/MAP/')
+    
+    # file = readimage('/home/teddy/Documents/DEVO/API/API_DEVO/MAP/map.png')
+    # image = Image.open(io.BytesIO(file))
+    # image.save('/home/teddy/Documents/DEVO/API_TEST/Mine_API_TEST/MAP/map_real.png')
     # print(data['session_data'])
 
     # im_bytes = base64.b64decode(data['image_data'])
@@ -71,7 +83,6 @@ def download_map(data):
 
     # print(data['image_data'])
     # print(data['session_data'])
-    # wget.download(data["link_png"], '/home/teddy/Documents/DEVO/API_TEST/Mine_API_TEST/MAP/map.png')
 
 @sio.on('command_to_do')
 def good_command(data):

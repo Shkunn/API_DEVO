@@ -378,17 +378,18 @@ def all_map():
 # TODO VERIFIER COMMENT FAIRE TELECAHRGER AU ROBOT LA BONNE MAP 
 
 @app.route('/api/map/download/map.session', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def map_session():
     with open('map.session', 'rb') as f:
-        image_data = f.read()
-    return image_data
+        session_data = f.read()
+    return session_data
 
 @app.route('/api/map/download/map.png', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def map_png():
     with open('map.png', 'rb') as f:
         image_data = f.read()
+    image_data = bytearray(image_data)
     return image_data
 
 ################################################
@@ -551,10 +552,11 @@ def handle_message(data):
         if maps is not None:
             print(maps)          
 
-        download_dict["id"] = maps[0]["map_name"]
+        download_dict["id"]           = maps[0]["map_name"]
         download_dict["localisation"] = maps[0]["place"]
         download_dict["link_session"] = "https://api-devo-docker.herokuapp.com/api/map/download/map.session"
-        download_dict["link_png"] = "https://api-devo-docker.herokuapp.com/api/map/download/map.png"
+        download_dict["link_png"]     = "https://api-devo-docker.herokuapp.com/api/map/download/map.png"
+        # download_dict["link_png"]     = "http://0.0.0.0:5000/api/map/download/map.png"
 
         # with open('map.png', 'rb') as f:
         #     image_data = f.read()
