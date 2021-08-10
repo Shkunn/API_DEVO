@@ -107,7 +107,7 @@ if __name__ == '__main__':
     while not connected:
         try:
             # sio.connect('http://0.0.0.0:5000')    
-            sio.connect('https://api-devo-docker.herokuapp.com/#/MK2R2_1')
+            sio.connect('https://api-devo-docker.herokuapp.com/')
         except socketio.exceptions.ConnectionError as err:
             print("ConnectionError: ", err)
         else:
