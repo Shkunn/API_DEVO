@@ -66,20 +66,6 @@ def pong():
 def download_map(data):
     print(data['link_png'])
     wget.download(data["link_png"], '/home/teddy/Documents/DEVO/API/API_DEVO/MAP/')
-    
-    # file = readimage('/home/teddy/Documents/DEVO/API/API_DEVO/MAP/map.png')
-    # image = Image.open(io.BytesIO(file))
-    # image.save('/home/teddy/Documents/DEVO/API_TEST/Mine_API_TEST/MAP/map_real.png')
-    # print(data['session_data'])
-
-    # im_bytes = base64.b64decode(data['image_data'])
-    # im_arr = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
-    # img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
-
-    # cv2.imwrite("MAP/image.png", img)
-
-    # image_64_decode = base64.decodebytes(data['session_data'])
-    # print(image_64_decode)
 
     # print(data['image_data'])
     # print(data['session_data'])

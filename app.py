@@ -375,13 +375,14 @@ def all_map():
 
 ################################################
 
-# TODO VERIFIER COMMENT FAIRE TELECAHRGER AU ROBOT LA BONNE MAP 
+# TODO ADD LOGIN_REQUIRED POUR LES ROBOTS
 
 @app.route('/api/map/download/map.session', methods=['GET', 'POST'])
 # @login_required
 def map_session():
     with open('map.session', 'rb') as f:
         session_data = f.read()
+    session_data = bytearray(session_data)
     return session_data
 
 @app.route('/api/map/download/map.png', methods=['GET', 'POST'])
