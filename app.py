@@ -1,11 +1,7 @@
-import base64
-# import eventlet
-# eventlet.monkey_patch()
 import firebase_admin
 import numpy as np
 import sqlite3 
 
-# from cv2 import imread, imencode
 from datetime import date
 from firebase_admin import credentials
 from firebase_admin import db
@@ -48,7 +44,7 @@ link_interface = {}
 
 # sensor doit avoir une de ces valeurs[ 0, 1, 2 ,3]
 global_sensor = {
-    'sensors' : [3, 3, 3, 3, 3, 3, 3], 
+    'sensors' : [1, 0, 0, 0, 0, 1, 0], 
     'stats' : {
         'volt' : "10",
         'heatCore' : "70",
@@ -458,6 +454,7 @@ def robot_position_to_reach(name, position):
 def test_connect():
     print('Client Connected')
 
+# TODO EMIT ping and receive pong to calculate in the api not in the robot  
 @socketio.on('ping')
 def ping():
     username = request.sid
@@ -511,19 +508,41 @@ def handle_message_interface(auth):
 def handle_global_data(data):
     shared_received = data
 
+    sensors     = [shared_received['ulF1'], shared_received['ulF0'], shared_received['ulF3'], shared_received['ulF2'], shared_received['ulB0'], shared_received['ulB1'], shared_received['ulB2']]
+    sensors     = [1 if x >= 2000 else 3 if x < 500 else 2 for x in sensors]
+    volt        = str(shared_received['voltage'])
+    heatCore    = str(shared_received['cpu_heat'])
+    if shared_received['microA_state'] == 1:
+        esp32_A     = "ON"
+    else:
+        esp32_A     = "OFF"
+    if shared_received['microB_state'] == 1:
+        esp32_B     = "ON"
+    else:
+        esp32_B     = "OFF"
+    slam        = str(shared_received['slam_state'])
+    speed       = "TODO"
+    timeUsed    = "TODO"
+    ping        = "TODO"
+
+    global_sensor['sensors']            = sensors
+    global_sensor['stats']['volt']      = volt
+    global_sensor['stats']['heatCore']  = heatCore
+    global_sensor['stats']['esp32_A']   = esp32_A
+    global_sensor['stats']['esp32_B']   = esp32_B
+    global_sensor['stats']['slam']      = slam
+    global_sensor['stats']['speed']     = speed
+    global_sensor['stats']['timeUsed']  = timeUsed
+    global_sensor['infos']['ping']      = ping
+
     if bool(interface):
         for key, value in list(robot.items()):
             if value == request.sid:
                 name = key
         
         sid = interface[name]
-        global_sensor['sensors'][0] = shared_received['ulF0']
         socketio.emit('MESSAGE', global_sensor, to=sid)
         print("emitted")
-
-################################################
-
-# TODO REVERIFIER CHECK_MAP & POSITION
 
 @socketio.on('check_map')
 def handle_message(data):
@@ -557,7 +576,9 @@ def handle_message(data):
 
         socketio.emit('download', download_dict, to=request.sid)
 
+################################################
 
+# TODO REVERIFIER POSITION
 # @socketio.on('position')
 # def handle_message(data):
 #     position = np.empty(2)
@@ -664,5 +685,5 @@ def get_data(data):
 
 
 if __name__ == '__main__':
-    # socketio.run(app, host="0.0.0.0")
-    app.run(host="0.0.0.0")
+    socketio.run(app, host="0.0.0.0")
+    # app.run(host="0.0.0.0")
