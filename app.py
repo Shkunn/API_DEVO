@@ -559,28 +559,6 @@ def handle_message(data):
         download_dict["link_png"]     = "https://api-devo-docker.herokuapp.com/api/map/download/map.png"
         # download_dict["link_png"]     = "http://0.0.0.0:5000/api/map/download/map.png"
 
-        # with open('map.png', 'rb') as f:
-        #     image_data = f.read()
-
-        # with open('map.session', 'rb') as f:
-        #     session_data = f.read()
-
-        # img_png = imread( 'map.png' )
-        # frame_png = imencode( '.png', img_png )[ 1 ]
-        # encoded_png = base64.b64encode( frame_png ) 
-
-
-        # session_64_encode = base64.encodebytes(session_data)
-
-
-        # socketio.emit('download', {'image_data': image_data}, sid=request.sid)
-
-
-        # download_dict["id"] = maps[0]["map_name"]
-        # download_dict["localisation"] = maps[0]["place"]
-        # download_dict["image_data"] = image_data
-        # download_dict["session_data"] = session_data
-
         socketio.emit('download', download_dict, to=request.sid)
 
 
@@ -638,7 +616,7 @@ def disconnect():
             del robot[key]
             del link_interface[key]
             print(key, "is deleted")
-            if bool(interface):
+            if bool(interface) and name_robot in interface:
                 socketio.emit('MESSAGE', global_sensor_empty, to=interface[name_robot])
 
     sql = """ UPDATE robots 
@@ -690,5 +668,5 @@ def get_data(data):
 
 
 if __name__ == '__main__':
-    # socketio.run(app, host="0.0.0.0")
-    app.run(host="0.0.0.0")
+    socketio.run(app, host="0.0.0.0")
+    # app.run(host="0.0.0.0")

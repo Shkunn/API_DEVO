@@ -7,7 +7,7 @@ import cv2
 
 sio = socketio.Client()
 
-map_number = 2
+map_number = 1
 localisation = 'DVIC'
 start_Time = None 
 
@@ -72,7 +72,7 @@ def download_map(data):
 
 @sio.on('command_to_do')
 def good_command(data):
-    print('DATA: ', data)
+    print('DATA: ', type(data))
 
 @sio.on('position_to_reach')
 def good_position(data):
@@ -107,7 +107,7 @@ if __name__ == '__main__':
     while not connected:
         try:
             # sio.connect('http://0.0.0.0:5000')    
-            sio.connect('https://api-devo-docker.herokuapp.com/')
+            sio.connect('https://api-devo-docker.herokuapp.com/#/MK2R2_1')
         except socketio.exceptions.ConnectionError as err:
             print("ConnectionError: ", err)
         else:
