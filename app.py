@@ -46,8 +46,6 @@ date_dict[today] = {}
 
 link_interface = {}
 
-shared_received = []
-
 # sensor doit avoir une de ces valeurs[ 0, 1, 2 ,3]
 global_sensor = {
     'sensors' : [3, 3, 3, 3, 3, 3, 3], 
@@ -497,7 +495,7 @@ def handle_message(auth):
 def handle_message_interface(auth):
     global interface
 
-    print(auth, 'Connected')
+    print(auth, ' Interface Connected')
     username = request.sid
     room = request.sid
     join_room(room)
@@ -507,23 +505,21 @@ def handle_message_interface(auth):
     with open('map.png', 'rb') as f:
         image_data = f.read()
     
-    socketio.emit('received_image', {'image_data': image_data}, sid=username)
+    socketio.emit('received_image', {'image_data': image_data}, to=username)
 
 @socketio.on('global_data')
 def handle_global_data(data):
-    global shared_received
     shared_received = data
-    # print(shared_received)
 
     if bool(interface):
-        print(interface)
         for key, value in list(robot.items()):
             if value == request.sid:
                 name = key
         
         sid = interface[name]
-        global_sensor['sensors'] = shared_received
+        global_sensor['sensors'][0] = shared_received['ulF0']
         socketio.emit('MESSAGE', global_sensor, to=sid)
+        print("emitted")
 
 ################################################
 
@@ -668,5 +664,5 @@ def get_data(data):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host="0.0.0.0")
-    # app.run(host="0.0.0.0")
+    # socketio.run(app, host="0.0.0.0")
+    app.run(host="0.0.0.0")

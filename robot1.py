@@ -12,15 +12,6 @@ localisation = 'DVIC'
 start_Time = None 
 
 
-import io
-import PIL.Image as Image
-
-def readimage(path):
-    with open(path, "rb") as f:
-        return bytearray(f.read())
-
-
-
 # sensor doit avoir une de ces valeurs[ 0, 1, 2 ,3]
 global_sensor = {
     'sensors' : [3, 3, 3, 3, 3, 3, 3], 
@@ -72,7 +63,7 @@ def download_map(data):
 
 @sio.on('command_to_do')
 def good_command(data):
-    print('DATA: ', type(data))
+    print('DATA: ', data)
 
 @sio.on('position_to_reach')
 def good_position(data):
