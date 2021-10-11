@@ -10,6 +10,7 @@ from flask_cors import CORS
 from flask_login import LoginManager, login_required, current_user, UserMixin, login_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, emit, join_room, leave_room, close_room
+from PIL import Image
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -499,10 +500,16 @@ def handle_message_interface(auth):
     
     interface[auth] = username
 
+    filepath = 'map.png'
+
+    im=Image.open(filepath)
+
     with open('map.png', 'rb') as f:
         image_data = f.read()
     
     socketio.emit('received_image', {'image_data': image_data}, to=username)
+    socketio.emit('size_map', {'size': im.size}, to=username)
+
 
 @socketio.on('global_data')
 def handle_global_data(data):
