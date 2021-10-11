@@ -508,7 +508,7 @@ def handle_message_interface(auth):
         image_data = f.read()
     
     socketio.emit('received_image', {'image_data': image_data}, to=username)
-    socketio.emit('size_map', {'size': im.size}, to=username)
+    socketio.emit('size_map', im.size, to=username)
 
 
 @socketio.on('global_data')
