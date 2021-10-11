@@ -525,6 +525,11 @@ def handle_global_data(data):
     timeUsed    = "TODO"
     ping        = "TODO"
 
+    position_i  = str(shared_received['pose_ti'])
+    position_j  = str(shared_received['pose_tj'])
+    position    = [position_i, position_j]
+
+
     global_sensor['sensors']            = sensors
     global_sensor['stats']['volt']      = volt
     global_sensor['stats']['heatCore']  = heatCore
@@ -534,6 +539,7 @@ def handle_global_data(data):
     global_sensor['stats']['speed']     = speed
     global_sensor['stats']['timeUsed']  = timeUsed
     global_sensor['infos']['ping']      = ping
+    global_sensor['position']           = position
 
     if bool(interface):
         for key, value in list(robot.items()):
