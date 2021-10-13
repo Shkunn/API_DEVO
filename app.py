@@ -64,6 +64,10 @@ global_sensor = {
     'position' : [50, 50]
 }
 
+debug_sensor = {
+    'keypoint_path' : [[0, 0], [10, 10]]
+}
+
 global_sensor_empty = {
     'sensors' : [0, 0, 0, 0, 0, 0, 0], 
     'stats' : {
@@ -555,6 +559,19 @@ def handle_global_data(data):
         
         sid = interface[name]
         socketio.emit('MESSAGE', global_sensor, to=sid)
+        print("emitted")
+
+@socketio.on('debug_data')
+def handle_debug_data(data):
+    shared_received = data
+
+    if bool(interface):
+        for key, value in list(robot.items()):
+            if value == request.sid:
+                name = key
+        
+        sid = interface[name]
+        socketio.emit('MESSAGE_debug', debug_sensor, to=sid)
         print("emitted")
 
 @socketio.on('check_map')
