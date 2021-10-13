@@ -561,9 +561,14 @@ def handle_global_data(data):
         socketio.emit('MESSAGE', global_sensor, to=sid)
         print("emitted")
 
-@socketio.on('debug_data')
+
+@socketio.on('data_debug_robot')
 def handle_debug_data(data):
     shared_received = data
+    
+    path                            = str(shared_received['keypoint_path'])
+
+    debug_sensor['keypoint_path']   = path
 
     if bool(interface):
         for key, value in list(robot.items()):
