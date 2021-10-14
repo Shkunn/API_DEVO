@@ -65,7 +65,8 @@ global_sensor = {
 }
 
 debug_sensor = {
-    'keypoint_path' : [[0, 0], [10, 10]]
+    'keypoint_path' : [[0, 0], [10, 10]],
+    'target_keypoint' : [0, 0]
 }
 
 global_sensor_empty = {
@@ -566,9 +567,14 @@ def handle_global_data(data):
 def handle_debug_data(data):
     shared_received = data
     
-    path                            = str(shared_received['keypoint_path'])
+    path                                    = str(shared_received['keypoint_path'])
+    target_keypoints_x                      = str(shared_received['target_keypoints_x'])
+    target_keypoints_y                      = str(shared_received['target_keypoints_y'])
 
-    debug_sensor['keypoint_path']   = path
+    target_keypoint                         = [target_keypoints_x, target_keypoints_y]
+
+    debug_sensor['keypoint_path']           = path
+    debug_sensor['target_keypoint']         = target_keypoint
 
     if bool(interface):
         for key, value in list(robot.items()):
