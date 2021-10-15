@@ -61,7 +61,8 @@ global_sensor = {
         'ip' : '172.21.72.168',
         'ping' : "30"
     },
-    'position' : [50, 50]
+    'position' : [50, 50],
+    'projection' :[0,0]
 }
 
 debug_sensor = {
@@ -532,14 +533,19 @@ def handle_global_data(data):
         esp32_B     = "ON"
     else:
         esp32_B     = "OFF"
-    slam        = str(shared_received['slam_state'])
-    speed       = "TODO"
-    timeUsed    = "TODO"
-    ping        = "TODO"
+    slam            = str(shared_received['slam_state'])
+    speed           = "TODO"
+    timeUsed        = "TODO"
+    ping            = "TODO"
+    
+    position_i      = str(shared_received['pose_ti'])
+    position_j      = str(shared_received['pose_tj'])
+    position        = [position_i, position_j]
 
-    position_i  = str(shared_received['pose_ti'])
-    position_j  = str(shared_received['pose_tj'])
-    position    = [position_i, position_j]
+    projection_i    = str(shared_received['pose_vi'])
+    projection_j    = str(shared_received['pose_vj'])
+    projection      = [projection_i, projection_j]
+
 
 
     global_sensor['sensors']            = sensors
@@ -552,6 +558,7 @@ def handle_global_data(data):
     global_sensor['stats']['timeUsed']  = timeUsed
     global_sensor['infos']['ping']      = ping
     global_sensor['position']           = position
+    global_sensor['projection']         = projection
 
     if bool(interface):
         for key, value in list(robot.items()):
