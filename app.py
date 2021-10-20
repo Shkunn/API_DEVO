@@ -561,6 +561,7 @@ def handle_global_data(data):
     global_sensor['infos']['ping']      = ping
     global_sensor['position']           = position
     global_sensor['projection']         = projection
+    
     global_sensor['lidar_data']         = lidar_data
 
     if bool(interface):
