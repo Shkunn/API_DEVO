@@ -45,7 +45,6 @@ link_interface = {}
 
 # sensor doit avoir une de ces valeurs[ 0, 1, 2 ,3]
 global_sensor = {
-    'sensors' : [1, 0, 0, 0, 0, 1, 0], 
     'stats' : {
         'volt' : "10",
         'heatCore' : "70",
@@ -62,7 +61,8 @@ global_sensor = {
         'ping' : "30"
     },
     'position' : [50, 50],
-    'projection' :[0,0]
+    'projection' : [0,0],
+    'lidar_data': [[0, 0.5], [0, 1]]
 }
 
 debug_sensor = {
@@ -521,8 +521,8 @@ def handle_message_interface(auth):
 def handle_global_data(data):
     shared_received = data
 
-    sensors     = [shared_received['ulF1'], shared_received['ulF0'], shared_received['ulF3'], shared_received['ulF2'], shared_received['ulB0'], shared_received['ulB1'], shared_received['ulB2']]
-    sensors     = [1 if x >= 2000 else 3 if x < 500 else 2 for x in sensors]
+    # sensors     = [shared_received['ulF1'], shared_received['ulF0'], shared_received['ulF3'], shared_received['ulF2'], shared_received['ulB0'], shared_received['ulB1'], shared_received['ulB2']]
+    # sensors     = [1 if x >= 2000 else 3 if x < 500 else 2 for x in sensors]
     volt        = str(shared_received['voltage'])
     heatCore    = str(shared_received['cpu_heat'])
     if shared_received['microA_state'] == 1:
@@ -546,9 +546,11 @@ def handle_global_data(data):
     projection_j    = str(shared_received['pose_vj'])
     projection      = [projection_i, projection_j]
 
+    lidar_data      = str(shared_received['lidar_data'])
 
 
-    global_sensor['sensors']            = sensors
+
+    # global_sensor['sensors']            = sensors
     global_sensor['stats']['volt']      = volt
     global_sensor['stats']['heatCore']  = heatCore
     global_sensor['stats']['esp32_A']   = esp32_A
@@ -559,6 +561,8 @@ def handle_global_data(data):
     global_sensor['infos']['ping']      = ping
     global_sensor['position']           = position
     global_sensor['projection']         = projection
+    
+    global_sensor['lidar_data']         = lidar_data
 
     if bool(interface):
         for key, value in list(robot.items()):
