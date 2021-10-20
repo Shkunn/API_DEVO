@@ -62,7 +62,8 @@ global_sensor = {
         'ping' : "30"
     },
     'position' : [50, 50],
-    'projection' :[0,0]
+    'projection' : [0,0],
+    'lidar_data': [[0, 0.5], [0, 1]]
 }
 
 debug_sensor = {
@@ -545,6 +546,7 @@ def handle_global_data(data):
     projection_i    = str(shared_received['pose_vi'])
     projection_j    = str(shared_received['pose_vj'])
     projection      = [projection_i, projection_j]
+    lidar_data      = str(shared_received['lidar_data'])
 
 
 
@@ -559,6 +561,7 @@ def handle_global_data(data):
     global_sensor['infos']['ping']      = ping
     global_sensor['position']           = position
     global_sensor['projection']         = projection
+    global_sensor['lidar_data']         = lidar_data
 
     if bool(interface):
         for key, value in list(robot.items()):
