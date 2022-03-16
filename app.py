@@ -1,10 +1,18 @@
 import firebase_admin
 import numpy as np
-import sqlite3 
+import sqlite3
+import asyncio
+import threading
 
+# import eventlet
+# eventlet.monkey_patch()
+
+
+import time
 from datetime import date
 from firebase_admin import credentials
 from firebase_admin import db
+from firebase_admin import firestore
 from flask import Flask, Blueprint, render_template, redirect, url_for, request, flash, jsonify, abort
 from flask_cors import CORS
 from flask_login import LoginManager, login_required, current_user, UserMixin, login_user, logout_user
@@ -19,29 +27,31 @@ db = SQLAlchemy()
 DB_NAME = "users.db"
 
 
-cred = credentials.Certificate('FIREBASE/mk2r2-firebase.json')
-firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://mk2r2-firebase-default-rtdb.europe-west1.firebasedatabase.app/'
-})
+cred = credentials.Certificate('FIREBASE/hive-delivery-firebase.json')
+firebase_admin.initialize_app(cred)
+
+db_firestore = firestore.client()
 
 
 ##########################################################################################
 
-# GLOBAL VARIALBLE
+#region GLOBAL VARIALBLE
 
 robot                = {}
 interface            = {}
+operator             = {}
 dictionnary_position = {}
-download_dict = {}
+download_dict        = {}
+robotData_operator   = {}
 
 # FIREBASE PARAM
-date_dict = {}
-map_1 = {}
-position_dict = {}
-today = str(date.today())
-date_dict[today] = {}
-
-link_interface = {}
+date_dict            = {}
+map_1                = {}
+position_dict        = {}
+today                = str(date.today())
+date_dict[today]     = {}
+    
+link_interface       = {}
 
 # sensor doit avoir une de ces valeurs[ 0, 1, 2 ,3]
 global_sensor = {
@@ -89,6 +99,8 @@ global_sensor_empty = {
     },
     'position' : [0, 0]
 }
+
+#endregion
 
 ##########################################################################################
 
@@ -465,11 +477,15 @@ def test_connect():
 @socketio.on('ping')
 def ping():
     username = request.sid
-    # for key, value in list(robot.items()):
-    #     if value == request.sid:
-    #         name = key
-
     socketio.emit('pong', to=username)
+
+
+
+
+
+
+
+
 
 @socketio.on('robot')
 def handle_message(auth):
@@ -489,11 +505,29 @@ def handle_message(auth):
     conn_robot.execute(sql, (connection, auth))
     conn_robot.commit()
 
+    # cursor = cur_robot.execute("SELECT * FROM robots")
+
+    # robots = [
+    #     dict(id=row[0], name=row[1], status=row[2], connection=row[3], localisation=row[4], map=row[5])
+    #     for row in cursor.fetchall()
+    # ]
+
+    # print('ROBOTS : ', list(robots))
+
     position_dict[auth] = []
 
     link_interface[auth] = 'http://localhost:8080/#/' + str(auth)
 
     socketio.emit('received', "ok", to=username)
+    # print(operator['123'])
+    # socketio.emit('operator_data', list(robots), to=operator['123'])
+
+
+
+
+
+
+
 
 @socketio.on('interface')
 def handle_message_interface(auth):
@@ -515,6 +549,84 @@ def handle_message_interface(auth):
     
     socketio.emit('received_image', {'image_data': image_data}, to=username)
     socketio.emit('size_map', im.size, to=username)
+
+
+
+
+
+
+
+# CONNECTION FROM THE OPERATOR DATABASE, SEND BACK STATUS OF EVERY ROBOT LIVE FROM DATABASE
+@socketio.on('operator_interface')
+def handle_message_interface(auth):
+    global operator, robot
+
+    print(auth, ' : Operator Interface Connected')
+    username = request.sid
+    room = request.sid
+    join_room(room)
+    
+    operator[auth] = username
+
+    cursor = cur_robot.execute("SELECT * FROM robots")
+
+    robots = [
+        dict(id=row[0], name=row[1], status=row[2], connection=row[3], localisation=row[4], map=row[5])
+        for row in cursor.fetchall()
+    ]
+
+    socketio.emit('operator_data', list(robots), to=username)
+
+
+# UPDATE STATUS OF THE ROBOT IN THE DATABASE AND SEND TO OPERATOR INTERFACE
+@socketio.on('robot_status_operator')
+def handle_data_operator(data):
+
+    auth = data['name']
+
+    sql = """ UPDATE robots 
+            SET status=?
+            WHERE name=? """
+
+    status = data['status']
+
+    conn_robot.execute(sql, (status, auth))
+    conn_robot.commit()
+
+    cursor = cur_robot.execute("SELECT * FROM robots")
+
+    robots = [
+        dict(id=row[0], name=row[1], status=row[2], connection=row[3], localisation=row[4], map=row[5])
+        for row in cursor.fetchall()
+    ]
+
+    sid = operator['123']
+    socketio.emit('operator_data', list(robots), to=sid)
+
+
+
+# SHARE DATA WITH THE OPERATOR THAT CAN CHANGE OFTEN, NEARLY LIVE DATA (position, battery; etc...)
+@socketio.on('robot_data_operator')
+def handle_data_operator(data):
+    global robotData_operator
+    shared_received = data
+
+    robotData_operator[data['name']] = shared_received
+    # print(robotData_operator)
+
+    if bool(operator):
+        sid = operator['123']
+        socketio.emit('MESSAGE_operator', robotData_operator, to=sid)
+
+
+
+
+
+
+
+
+
+
 
 
 @socketio.on('global_data')
@@ -630,7 +742,7 @@ def handle_message(data):
 
 ################################################
 
-# TODO REVERIFIER POSITION
+#region TODO REVERIFIER POSITION
 # @socketio.on('position')
 # def handle_message(data):
 #     position = np.empty(2)
@@ -664,7 +776,16 @@ def handle_message(data):
 #     ref = db.reference('/')
 #     ref.set(date_dict)
 
+#endregion
+
 ################################################
+
+
+
+
+
+
+
 
 @socketio.on('disconnect')
 def disconnect():
@@ -682,6 +803,7 @@ def disconnect():
     for key, value in list(robot.items()):
         if value == request.sid:
             name_robot = key
+            del robotData_operator[key]
             del robot[key]
             del link_interface[key]
             print(key, "is deleted")
@@ -697,12 +819,39 @@ def disconnect():
     conn_robot.execute(sql, (connection, name_robot))
     conn_robot.commit()
 
+    sql = """ UPDATE robots 
+            SET status=?
+            WHERE name=? """
+
+    status = 'STOP'
+
+    conn_robot.execute(sql, (status, name_robot))
+    conn_robot.commit()
+
+
+    cursor = cur_robot.execute("SELECT * FROM robots")
+
+    robots = [
+        dict(id=row[0], name=row[1], status=row[2], connection=row[3], localisation=row[4], map=row[5])
+        for row in cursor.fetchall()
+    ]
+
+    # print(robots)
+    boolDataBase = False
+    for r in robots:
+        if r['connection'] == 'ON':
+            boolDataBase = True
+
+    if boolDataBase == False:
+        socketio.emit('MESSAGE_operator', {}, to=operator['123'])
+
+    socketio.emit('operator_data', list(robots), to=operator['123'])
+
     # If interface disconnects: request.sid with be the sid of the interface
     for key, value in list(interface.items()):
         if value == request.sid:
             name_interface = key
             del interface[key]
-
 
     print('Client disconnected')
 
@@ -732,10 +881,31 @@ def get_data(data):
     # Result is the name of the map which share the sme localisation a the data from the robot 
     return result
 
+# @socketio.on('firebase_socket')
+def get_orders():
+        # print('OK')
+        # docs = db_firestore.collection('orders').get()
+        # print(docs)
+        # for doc in docs:
+        #     print(doc.to_dict())
+        #     print()
 
+    while True:
+        # READ DATA FROM FIRESTORE
+        docs = db_firestore.collection('orders').order_by('timestamp').get()
+        print("docs ", docs)
+        # print(docs)
+        for doc in docs:
+            print(doc.to_dict())
+            print()
 
+        time.sleep(5)
 
+# threading.Thread(target=get_orders).start()
+# eventlet.spawn(get_orders)
 
 if __name__ == '__main__':
-    # socketio.run(app, host="0.0.0.0")
-    app.run(host="0.0.0.0")
+    socketio.run(app, host="0.0.0.0")
+    # input()
+    # TODO CHANGE THIS TO RUN HEROKU
+    # app.run(host="0.0.0.0")

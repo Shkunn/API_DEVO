@@ -35,6 +35,13 @@ global_sensor = {
 }
 
 
+data_operator = {
+    'name'     : "MK2R2_2",
+    'position' : {'lat' : 48.898750, 'lng' : 2.093590},
+    'batterie' : '40%',
+    'status'   : 'WAITING'
+}
+
 
 
 
@@ -109,20 +116,23 @@ if __name__ == '__main__':
     map_check = False
     while not connected:
         try:
-            # sio.connect('http://0.0.0.0:5000')    
-            sio.connect('https://api-devo-docker.herokuapp.com/')
+            sio.connect('http://0.0.0.0:5000')    
+            # sio.connect('https://api-devo-docker.herokuapp.com/')
         except socketio.exceptions.ConnectionError as err:
             print("ConnectionError: ", err)
         else:
             print("Connected!")
             connected = True
             sio.emit('robot', "MK2R2_2")
+            sio.emit('robot_status_operator', data_operator)
+
 
             i = 0
             while True:
-                send_global_data()
+                # send_global_data()
                 start_Time = time.time()
                 sio.emit('ping')
+                sio.emit('robot_data_operator', data_operator)
 
                 if not map_check:
                     check_map()

@@ -9,7 +9,8 @@ sio = socketio.Client()
 
 map_number = 1
 localisation = 'DVIC'
-start_Time = None 
+start_Time = None
+
 
 
 # sensor doit avoir une de ces valeurs[ 0, 1, 2 ,3]
@@ -34,6 +35,13 @@ global_sensor = {
 }
 
 
+data_operator = {
+    'name'     : "MK2R2_1",
+    'position' : {'lat' : 48.89518737792969, 'lng' : 2.128262758255005},
+    'batterie' : '40%',
+    'status'   : 'DELIVERY'
+}
+
 
 
 
@@ -55,11 +63,22 @@ def pong():
 
 @sio.on('download')
 def download_map(data):
-    print(data['link_png'])
-    wget.download(data["link_png"], '/home/teddy/Documents/DEVO/API/API_DEVO/MAP/')
+    # print(data['image_data'])
+    print('download')
+    # print(data['session_data'])
+
+    # im_bytes = base64.b64decode(data['image_data'])
+    # im_arr = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+    # img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+
+    # cv2.imwrite("MAP/image.png", img)
+
+    # image_64_decode = base64.decodebytes(data['session_data'])
+    # print(image_64_decode)
 
     # print(data['image_data'])
     # print(data['session_data'])
+    # wget.download(data["link_png"], '/home/teddy/Documents/DEVO/API_TEST/Mine_API_TEST/MAP/map.png')
 
 @sio.on('command_to_do')
 def good_command(data):
@@ -97,20 +116,23 @@ if __name__ == '__main__':
     map_check = False
     while not connected:
         try:
-            # sio.connect('http://0.0.0.0:5000')    
-            sio.connect('https://api-devo-docker.herokuapp.com/')
+            sio.connect('https://0.0.0.0:5000')    
+            # sio.connect('https://api-devo-docker.herokuapp.com/')
         except socketio.exceptions.ConnectionError as err:
             print("ConnectionError: ", err)
         else:
             print("Connected!")
             connected = True
             sio.emit('robot', "MK2R2_1")
+            sio.emit('robot_status_operator', data_operator)
+
 
             i = 0
             while True:
-                send_global_data()
+                # send_global_data()
                 start_Time = time.time()
                 sio.emit('ping')
+                sio.emit('robot_data_operator', data_operator)
 
                 if not map_check:
                     check_map()
