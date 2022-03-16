@@ -905,7 +905,7 @@ def get_orders():
 # eventlet.spawn(get_orders)
 
 if __name__ == '__main__':
-    socketio.run(app, host="0.0.0.0")
+    # socketio.run(app, host="0.0.0.0")
     # input()
     # TODO CHANGE THIS TO RUN HEROKU
-    # app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0")
