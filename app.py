@@ -627,7 +627,7 @@ def handle_command_operator(data):
 
     if bool(operator):
         sid = robot[shared_received[0]]
-        socketio.emit('operator_order_command', data[1], to=sid)
+        socketio.emit('operator_order_command', shared_received[1], to=sid)
 
 
 @socketio.on('operator_command_controller')
