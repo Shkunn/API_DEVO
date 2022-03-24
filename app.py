@@ -623,7 +623,7 @@ def handle_data_operator(data):
 
 @socketio.on('operator_command')
 def handle_command_operator(data):
-    shared_received = data
+    shared_received = data[1]
 
     if bool(operator):
         sid = robot[shared_received[0]]
