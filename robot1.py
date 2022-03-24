@@ -27,7 +27,7 @@ global_sensor = {
     },
     'infos' : {
         'status' : True,
-        'name' : "MK2R2_1",
+        'name' : "MK3_1",
         'ip' : '172.21.72.168',
         'ping' : "30"
     },
@@ -36,7 +36,7 @@ global_sensor = {
 
 
 data_operator = {
-    'name'     : "MK2R2_1",
+    'name'     : "MK3_1",
     'position' : {'lat' : 48.89518737792969, 'lng' : 2.128262758255005},
     'batterie' : '40%',
     'status'   : 'DELIVERY'
