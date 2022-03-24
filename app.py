@@ -580,7 +580,7 @@ def handle_message_interface(auth):
 
 # UPDATE STATUS OF THE ROBOT IN THE DATABASE AND SEND TO OPERATOR INTERFACE
 @socketio.on('robot_status_operator')
-def handle_data_operator(data):
+def handle_status_operator(data):
 
     auth = data['name']
 
@@ -618,8 +618,22 @@ def handle_data_operator(data):
         sid = operator['123']
         socketio.emit('MESSAGE_operator', robotData_operator, to=sid)
 
+@socketio.on('operator_command')
+def handle_command_operator(data):
+    shared_received = data
+
+    if bool(operator):
+        sid = robot[shared_received[0]]
+        socketio.emit('operator_order_command', shared_received, to=sid)
 
 
+@socketio.on('operator_command_controller')
+def handle_controller_operator(data):
+    shared_received = data
+
+    if bool(operator):
+        sid = robot[shared_received[0]]
+        socketio.emit('operator_order_controller', shared_received, to=sid)
 
 
 
@@ -905,7 +919,7 @@ def get_orders():
 # eventlet.spawn(get_orders)
 
 if __name__ == '__main__':
-    # socketio.run(app, host="0.0.0.0")
+    socketio.run(app, host="0.0.0.0")
     # input()
     # TODO CHANGE THIS TO RUN HEROKU
-    app.run(host="0.0.0.0")
+    # app.run(host="0.0.0.0")

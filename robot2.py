@@ -92,6 +92,11 @@ def good_position(data):
 def received(data):
     print(data)
 
+@sio.on('operator_order_command')
+def order_command(data):
+    print(data)
+    
+
 
 
 
