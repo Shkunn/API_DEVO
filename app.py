@@ -610,6 +610,8 @@ def handle_status_operator(data):
 def handle_data_operator(data):
     global robotData_operator
     data['position'] = {'lat' : data['latitude'], 'lng': data['longitude']}  
+    del data['latidude']
+    del data['longitude']
     shared_received = data
 
     robotData_operator[data['name']] = shared_received

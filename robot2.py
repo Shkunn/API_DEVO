@@ -37,7 +37,9 @@ global_sensor = {
 
 data_operator = {
     'name'     : "MK3_2",
-    'position' : {'lat' : 48.898750, 'lng' : 2.093590},
+    'latitude' : 48.898750,
+    'longitude': 2.093590,
+    # 'position' : {'lat' : 48.898750, 'lng' : 2.093590},
     'batterie' : '40%',
     'status'   : 'WAITING'
 }
