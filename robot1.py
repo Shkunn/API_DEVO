@@ -126,13 +126,13 @@ if __name__ == '__main__':
     while not connected:
         try:
             # sio.connect('http://0.0.0.0:5000')    
-            sio.connect('https://api-devo-docker.herokuapp.com/')
+            sio.connect('http://api-devo-docker.herokuapp.com/')
         except socketio.exceptions.ConnectionError as err:
             print("ConnectionError: ", err)
         else:
             print("Connected!")
             connected = True
-            sio.emit('robot', "MK2R2_1")
+            sio.emit('robot', "MK3_1")
             sio.emit('robot_status_operator', data_operator)
 
 
