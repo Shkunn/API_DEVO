@@ -125,8 +125,8 @@ if __name__ == '__main__':
     map_check = False
     while not connected:
         try:
-            sio.connect('http://0.0.0.0:5000')    
-            # sio.connect('https://api-devo-docker.herokuapp.com/')
+            # sio.connect('http://0.0.0.0:5000')    
+            sio.connect('https://api-devo-docker.herokuapp.com/')
         except socketio.exceptions.ConnectionError as err:
             print("ConnectionError: ", err)
         else:
