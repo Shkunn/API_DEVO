@@ -864,7 +864,8 @@ def disconnect():
     if boolDataBase == False:
         socketio.emit('MESSAGE_operator', {}, to=operator['123'])
 
-    socketio.emit('operator_data', list(robots), to=operator['123'])
+    if operator:
+        socketio.emit('operator_data', list(robots), to=operator['123'])
 
     # If interface disconnects: request.sid with be the sid of the interface
     for key, value in list(interface.items()):
