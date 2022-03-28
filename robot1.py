@@ -122,38 +122,37 @@ def send_global_data():
 def check_map():
     sio.emit('check_map', data = {"map_id" : map_number, "localisation": localisation})
 
-# def video_stream():
-#     cap = cv2.VideoCapture(0)
+def video_stream():
+    cap = cv2.VideoCapture(0)
 
-#     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 160);
-#     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 120);
-#     i = 0
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 160);
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 120);
+    i = 0
 
-#     while True:    
-#         ret, photo = cap.read()    
+    while True:    
+        ret, photo = cap.read()    
         
-#         # cv2.imshow('streaming', photo)    
+        # cv2.imshow('streaming', photo)    
         
-#         # ret, buffer = cv2.imencode(".jpg", photo, [int(cv2.IMWRITE_JPEG_QUALITY),30])    
+        # ret, buffer = cv2.imencode(".jpg", photo, [int(cv2.IMWRITE_JPEG_QUALITY),30])    
 
-#         # data_encode = np.array(buffer)
-#         # byte_encode = data_encode.tobytes()
-#         # x_as_bytes = pickle.dumps(buffer)
+        # data_encode = np.array(buffer)
+        # byte_encode = data_encode.tobytes()
+        # x_as_bytes = pickle.dumps(buffer)
 
-#         if i % 1 == 0:
-#             ret, buffer = cv2.imencode('.jpg', photo)
-#             jpg_as_text = base64.b64encode(buffer)
-#             jpg_as_text = f"data:image/jpg;base64, {str(jpg_as_text)[2:-1]}"
-#             # print(jpg_as_text)
+        if i % 1 == 0:
+            ret, buffer = cv2.imencode('.jpg', photo)
+            jpg_as_text = base64.b64encode(buffer)
+            jpg_as_text = f"data:image/jpg;base64, {str(jpg_as_text)[2:-1]}"
+            # print(jpg_as_text)
         
-#             sio.emit('stream_video', jpg_as_text)
+            sio.emit('stream_video', jpg_as_text)
         
-#         if cv2.waitKey(10) == 13:
-#             break  
+        if cv2.waitKey(10) == 13:
+            break  
 
-#         i += 1
+        i += 1
         
-# threading.Thread(target=video_stream).start()
 
 
 if __name__ == '__main__':
@@ -166,6 +165,7 @@ if __name__ == '__main__':
         except socketio.exceptions.ConnectionError as err:
             print("ConnectionError: ", err)
         else:
+            threading.Thread(target=video_stream).start()
             print("Connected!")
             connected = True
             sio.emit('robot', "MK3_1")

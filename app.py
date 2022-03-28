@@ -640,7 +640,17 @@ def handle_controller_operator(data):
         sid = robot[shared_received[0]]
         socketio.emit('operator_order_controller', shared_received, to=sid)
 
-
+# Receive Video Stream from robot and send it back to Operator
+@socketio.on('stream_video')
+def stream_video(data):
+    # data=pickle.loads(data)
+    # data = cv2.imdecode(data, cv2.IMREAD_COLOR)
+    print("DATA :", data)
+    if bool(operator):
+        sid = operator['123']
+        # print(operator)
+        socketio.emit('test', data, to=sid)
+    
 
 
 
