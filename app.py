@@ -645,7 +645,7 @@ def handle_controller_operator(data):
 def stream_video(data):
     # data=pickle.loads(data)
     # data = cv2.imdecode(data, cv2.IMREAD_COLOR)
-    print("DATA :", data)
+    # print("DATA :", data)
     if bool(operator):
         sid = operator['123']
         # print(operator)
