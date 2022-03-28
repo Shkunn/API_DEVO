@@ -4,6 +4,8 @@ import wget
 import numpy as np
 import base64
 import cv2 
+import pickle
+import threading
 
 sio = socketio.Client()
 
@@ -37,7 +39,9 @@ global_sensor = {
 
 data_operator = {
     'name'     : "MK3_1",
-    'position' : {'lat' : 48.89518737792969, 'lng' : 2.128262758255005},
+    'latitude' : 48.898750,
+    'longitude': 2.093590,
+    # 'position' : {'lat' : 48.89518737792969, 'lng' : 2.128262758255005},
     'batterie' : '40%',
     'status'   : 'DELIVERY'
 }
@@ -118,6 +122,38 @@ def send_global_data():
 def check_map():
     sio.emit('check_map', data = {"map_id" : map_number, "localisation": localisation})
 
+# def video_stream():
+#     cap = cv2.VideoCapture(0)
+
+#     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 160);
+#     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 120);
+#     i = 0
+
+#     while True:    
+#         ret, photo = cap.read()    
+        
+#         # cv2.imshow('streaming', photo)    
+        
+#         # ret, buffer = cv2.imencode(".jpg", photo, [int(cv2.IMWRITE_JPEG_QUALITY),30])    
+
+#         # data_encode = np.array(buffer)
+#         # byte_encode = data_encode.tobytes()
+#         # x_as_bytes = pickle.dumps(buffer)
+
+#         if i % 1 == 0:
+#             ret, buffer = cv2.imencode('.jpg', photo)
+#             jpg_as_text = base64.b64encode(buffer)
+#             jpg_as_text = f"data:image/jpg;base64, {str(jpg_as_text)[2:-1]}"
+#             # print(jpg_as_text)
+        
+#             sio.emit('stream_video', jpg_as_text)
+        
+#         if cv2.waitKey(10) == 13:
+#             break  
+
+#         i += 1
+        
+# threading.Thread(target=video_stream).start()
 
 
 if __name__ == '__main__':
@@ -134,7 +170,6 @@ if __name__ == '__main__':
             connected = True
             sio.emit('robot', "MK3_1")
             sio.emit('robot_status_operator', data_operator)
-
 
             i = 0
             while True:
