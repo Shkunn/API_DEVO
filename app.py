@@ -655,7 +655,7 @@ def stream_video(data):
     if bool(operator):
         sid = sid = robot[data[0]]
         # print(operator)
-        socketio.emit('stream_ON', data, to=sid)
+        socketio.emit('stream_ON', data[1], to=sid)
     
 
 
