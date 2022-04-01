@@ -130,16 +130,8 @@ def video_stream():
     i = 0
 
     while True:    
-        ret, photo = cap.read()    
+        ret, photo = cap.read()
         
-        # cv2.imshow('streaming', photo)    
-        
-        # ret, buffer = cv2.imencode(".jpg", photo, [int(cv2.IMWRITE_JPEG_QUALITY),30])    
-
-        # data_encode = np.array(buffer)
-        # byte_encode = data_encode.tobytes()
-        # x_as_bytes = pickle.dumps(buffer)
-
         if i % 1 == 0:
             ret, buffer = cv2.imencode('.jpg', photo)
             jpg_as_text = base64.b64encode(buffer)
@@ -147,6 +139,7 @@ def video_stream():
             # print(jpg_as_text)
         
             sio.emit('stream_video', jpg_as_text)
+            sio.emit('stream_lidar', jpg_as_text)
         
         if cv2.waitKey(10) == 13:
             break  

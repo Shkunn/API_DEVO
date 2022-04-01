@@ -646,15 +646,20 @@ def stream_video(data):
 
     if bool(operator):
         sid = operator['123']
-        # print(operator)
-        socketio.emit('test', data, to=sid)
+        socketio.emit('streamVideo', data, to=sid)
+
+@socketio.on('stream_lidar')
+def stream_lidar(data):
+
+    if bool(operator):
+        sid = operator['123']
+        socketio.emit('streamLidar', data, to=sid)
 
 @socketio.on('stream_active')
-def stream_video(data):
+def stream_active(data):
 
     if bool(operator):
         sid = sid = robot[data[0]]
-        # print(operator)
         socketio.emit('stream_ON', data[1], to=sid)
     
 
